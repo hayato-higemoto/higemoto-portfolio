@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Higemoto's portfolio</title>
+<meta name="description" content="Higemoto's design portfolio">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#000;color:#fff;font-family:"Helvetica Neue",Arial,"Hiragino Sans",sans-serif;-webkit-font-smoothing:antialiased}
+header{padding:48px 20px 32px;text-align:center}
+h1{font-size:22px;font-weight:600;letter-spacing:.08em}
+main{max-width:1100px;margin:0 auto;padding:0 12px 40px}
+.grid{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:640px){.grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1000px){.grid{grid-template-columns:repeat(3,1fr)}}
+.item{aspect-ratio:1/1;background:#111;overflow:hidden;cursor:zoom-in;border-radius:4px}
+.item img{width:100%;height:100%;object-fit:cover;display:block;opacity:0;transition:opacity .4s}
+.item img.loaded{opacity:1}
+#sentinel{height:1px}
+#more{display:block;margin:24px auto 0;background:none;color:#aaa;border:1px solid #444;padding:10px 24px;border-radius:999px;font-size:13px}
+footer{text-align:center;color:#666;font-size:11px;padding:24px 0 40px}
+#lb{position:fixed;inset:0;background:rgba(0,0,0,.95);display:none;align-items:center;justify-content:center;z-index:10;cursor:zoom-out}
+#lb.open{display:flex}
+#lb img{max-width:96vw;max-height:92vh;object-fit:contain}
+</style>
+</head>
+<body>
+<header><h1>Higemoto's portfolio</h1></header>
+<main>
+  <div class="grid" id="grid"></div>
+  <div id="sentinel"></div>
+  <button id="more" hidden>もっと見る</button>
+</main>
+<footer>&copy; Higemoto</footer>
+<div id="lb"><img alt=""></div>
+<script>
+const PAGE=5;let works=[],shown=0;
+const grid=document.getElementById('grid'),more=document.getElementById('more');
+const lb=document.getElementById('lb'),lbImg=lb.querySelector('img');
+function next(){
+  works.slice(shown,shown+PAGE).forEach(w=>{
+    const d=document.createElement('div');d.className='item';
+    const im=new Image();im.alt=w.title||"Higemoto's work";im.decoding='async';
+    im.onload=()=>im.classList.add('loaded');im.src=w.src;
+    d.appendChild(im);d.onclick=()=>{lbImg.src=w.src;lb.classList.add('open')};
+    grid.appendChild(d);
+  });
+  shown=Math.min(shown+PAGE,works.length);
+  more.hidden=shown>=works.length;
+}
+lb.onclick=()=>lb.classList.remove('open');
+more.onclick=next;
+fetch('works.json').then(r=>r.json()).then(j=>{
+  works=j;next();
+  new IntersectionObserver(e=>{if(e[0].isIntersecting&&shown<works.length)next()},{rootMargin:'200px'}).observe(document.getElementById('sentinel'));
+});
+</script>
+</body>
+</html>
