@@ -3,12 +3,6 @@
   "src": "images/work-011.jpg"
  },
  {
-  "src": "images/work-001.jpg"
- },
- {
-  "src": "images/work-002.jpg"
- },
- {
   "src": "images/work-003.jpg"
  },
  {
@@ -31,5 +25,11 @@
  },
  {
   "src": "images/work-010.jpg"
+ },
+ {
+  "src": "images/work-001.jpg"
+ },
+ {
+  "src": "images/work-002.jpg"
  }
 ]
