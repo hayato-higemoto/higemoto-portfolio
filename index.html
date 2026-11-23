@@ -53,7 +53,9 @@ lb.onclick=()=>lb.classList.remove('open');
 more.onclick=next;
 fetch('works.json').then(r=>r.json()).then(j=>{
   works=j;next();
-  new IntersectionObserver(e=>{if(e[0].isIntersecting&&shown<works.length)next()},{rootMargin:'200px'}).observe(document.getElementById('sentinel'));
+  const sen=document.getElementById('sentinel');
+  const io=new IntersectionObserver(e=>{if(e[0].isIntersecting&&shown<works.length){next();io.unobserve(sen);requestAnimationFrame(()=>io.observe(sen));}},{rootMargin:'200px'});
+  io.observe(sen);
 });
 </script>
 </body>
